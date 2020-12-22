@@ -10,7 +10,10 @@
 <body>
   <div class="container">
     <div class="moreCases">
-      <h1>Todos os estados do brasil : <span id="stateWithMoreCases"></span></h1>
+      <h1>Estado com mais casos no Brasil : <span id="stateWithMoreCases"></span></h1>
+      <div style="display: flex; margin-top: 20px; align-items: center; justify-content: center;">
+        <span style="margin-right: 10px;">Total de casos: </span><span id="casesOfCovid"></span>
+      </div>
 
     </div>
     <div class="showCases">
@@ -69,16 +72,17 @@
     console.log(covid.value)
   })
 
-  const AllStatesOfBRazil = () => {
+  const MoreCasesInBrazil = () => {
     const apiStates = fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/sp')
 
     apiStates
       .then(r => r.json())
       .then(body => {
-        console.log(body.state)
+        document.querySelector('#stateWithMoreCases').innerText = body.state
+        document.querySelector('#casesOfCovid').innerText = body.cases
       })
   }
-  AllStatesOfBRazil()
+  MoreCasesInBrazil()
 </script>
 
 <style>
@@ -112,6 +116,14 @@
     margin-top: 30px;
     font-size: 16px;
     text-align: center;
+  }
+
+  #casesOfCovid {
+    text-align: center;
+    display: block;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: underline;
   }
 
   .showCases {
@@ -171,6 +183,7 @@
     .moreCases {
       order: 1;
       border: none;
+      margin-top: 40px;
     }
   }
 </style>
