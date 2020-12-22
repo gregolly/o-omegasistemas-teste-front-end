@@ -8,7 +8,171 @@
 </head>
 
 <body>
+  <div class="container">
+    <div class="moreCases">
+      <h1>Todos os estados do brasil : <span id="stateWithMoreCases"></span></h1>
 
+    </div>
+    <div class="showCases">
+      <form class="covidForm" action="">
+        <div class="input-group">
+          <label for="estado">Consulte seu estado com a abreviação de seu nome, exemplo: sp</label>
+          <input id="estado" type="text" id="covid-search">
+        </div>
+        <div class="input-group">
+          <label for="cases">Total de casos:</label>
+          <input id="cases" type="text">
+        </div>
+        <div class="input-group">
+          <label for="deaths">Total de mortes:</label>
+          <input id="deaths" type="text">
+        </div>
+        <div class="input-group">
+          <label for="suspects">Casos suspeitos:</label>
+          <input id="suspects" type="text">
+        </div>
+        <div class="input-group">
+          <label for="refuses">Total de recuperados:</label>
+          <input id="refuses" type="text">
+        </div>
+        <div class="input-group">
+          <label for="datetime">Data da pesquisa</label>
+          <input id="datetime" type="text">
+        </div>
+      </form>
+      <button type="submit" id="submit">Buscar casos por estado</button>
+    </div>
+  </div>
 </body>
+
+<script>
+  const covid = document.querySelector('#estado')
+  const buttonSubmit = document.querySelector('#submit')
+
+  const showData = (result) => {
+    for (const field in result) {
+      if (document.querySelector('#' + field)) {
+        console.log(field)
+        document.querySelector('#' + field).value = result[field]
+      }
+    }
+  }
+
+  buttonSubmit.addEventListener('click', (e) => {
+    let search = covid.value
+    fetch(`https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/${search}`)
+      .then(res => {
+        res.json()
+          .then(data => showData(data))
+      })
+      .catch(e => console.log('Deu errado: ', e.message))
+    console.log(covid.value)
+  })
+
+  const AllStatesOfBRazil = () => {
+    const apiStates = fetch('https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/sp')
+
+    apiStates
+      .then(r => r.json())
+      .then(body => {
+        console.log(body.state)
+      })
+  }
+  AllStatesOfBRazil()
+</script>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #212121;
+    font-family: 'roboto', sans-serif;
+  }
+
+  .container {
+    max-width: 1280px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto 25px;
+  }
+
+  .moreCases {
+    flex: 1 1 20%;
+    max-width: 30%;
+    color: #fff;
+    border-right: 1px solid;
+    min-height: 100vh;
+  }
+
+  .moreCases h1 {
+    margin-top: 30px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .showCases {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 70%;
+    max-width: 70%;
+  }
+
+  .covidForm {
+    padding: 10px;
+    color: #fff;
+    align-items: center;
+    text-align: center;
+  }
+
+  .covidForm label {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  .input-group input {
+    width: 50%;
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    font-size: 18px;
+  }
+
+  button[type=submit] {
+    margin-top: 20px;
+    border: none;
+    color: #fff;
+    background-color: #84e;
+    width: 250px;
+    align-self: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+
+  @media(max-width: 768px) {
+
+    .moreCases,
+    .showCases {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    .showCases {
+      order: 0;
+    }
+
+    .moreCases {
+      order: 1;
+      border: none;
+    }
+  }
+</style>
 
 </html>
